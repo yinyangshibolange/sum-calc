@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+ <title>计算票据最近值和</title>
+
+ <link rel="stylesheet" href="css/bootstrap.min.css">
+ <script src="js/bootstrap.min.js"></script>
+ <script src="calc.js"></script>
+</head>
+
+<body>
+ <label for="sum">待求和总数</label>
+ <input id="sum" name="sum" type="number">
+ <button id="add" type="button" class="btn btn-primary">添加票据</button>
+
+ <ul id="tickets">
+
+ </ul>
+ <button id="calc" type="button" class="btn btn-primary">开始计算</button>
+
+ <div id="result" class="result"></div>
+
+
+ <script>
+  var calc_history = localStorage.getItem("calc_history")
+  if (calc_history) {
+   calc_history = JSON.parse(calc_history)
+  } else {
+   calc_history = []
+  }
+  var tickets = document.getElementById("tickets")
+  document.getElementById('add').addEventListener("click", function (ev) {
+   var li = document.createElement("li")
+   var input = document.createElement("input")
+   input.type = 'number'
+   li.appendChild(input)
+   tickets.appendChild(li)
+  })
+  document.getElementById("calc").addEventListener("click", function (ev) {
+   var values = [], inputs = document.querySelectorAll("#tickets li input")
+   var target = +document.getElementById("sum").value
+   if (isNaN(target) || target == 0) {
+    alert("总数填写错误")
+    return
+   }
+
+   inputs.forEach(ipt => {
+    var val
+    try {
+     val = +ipt.value
+    } catch (err) {
+     val = 0
+    }
+    values.push(val)
+   })
+
+   var result = calc(values, target)
+
+   document.getElementById("result").innerText = `最终最近总和为：${result.min},求和数分别是：${result.minArr.join(",")}`
+
+   var history_find = calc_history.find(item => {
+    return item.values.join(",") === values.join(",") && item.target === target
+   })
+   if (!history_find) {
+    calc_history.push({
+     values,
+     target,
+     min: result.min,
+     minArr: result.minArr
+    })
+    localStorage.setItem("calc_history", calc_history)
+   }
+
+  })
+
+ </script>
+</body>
+
+</html>
