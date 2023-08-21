@@ -2,34 +2,92 @@
 <html>
 
 <head>
- <title>计算票据最近值和</title>
- <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
- <script src="js/calc.js"></script>
- <script src="js/jquery.min.js"></script>
- <link rel="stylesheet" href="css/index.css">
+   <title>计算票据最近值和</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+   <script src="js/calc.js"></script>
+   <script src="js/jquery.min.js"></script>
+   <link rel="stylesheet" href="css/index.css">
+   <link rel="stylesheet" href="css/common.css">
 </head>
 
 <body>
- <div class="me-container ">
+   <div class="me-container ">
 
-  <div id="wrapper" class="scroll1">
-   <label for="sum">待求和总数</label>
-   <input id="sum" name="sum" type="number">
-<div class="btns">
- <button id="add" type="button" class="btn btn-primary">添加票据</button>
- <button id="calc" type="button" class="btn btn-primary">开始计算</button>
-</div>
+      <div id="wrapper" class="scroll1">
+         <p>
+            该工具可以计算出距离目标值最近的数，可以设置大于/小于/大于小于均可的模式，“大于”模式对开票报销非常有用，可以计算出大于目标值的最近求和数
+         </p>
+         <p>
+            例如我设置目标值为500,然后“添加数据”依次为112,235,115,150,200,213.5,90.5,55.5,166,19.8
+         </p>
+         <div class="flex-align-center">
+            <label class="label-min-100" for="mode">模式</label>
+            <select name="mode" id="mode" class="t-center" value="closest">
+               <option value="closest">大小于均可</option>
+               <option value="greater">大于目标值</option>
+               <option value="less">小于目标值</option>
+            </select>
+         </div>
+         <div class="flex-align-center mt-7">
+            <label class="label-min-100" for="sum">目标值</label>
+            <input id="sum" name="sum" type="number" class="t-center">
+         </div>
 
-   <ul id="tickets">
+         <div class="flex-align-center mt-7">
+            <label class="label-min-100" for="error_threshold">误差阈值</label>
+            <input id="error_threshold" name="error_threshold" type="number" class="t-center" value="0">
 
-   </ul>
+            <div class="help">
+               <a class="help-trigger">?</a>
+               <div class="help-msg left-top">找到误差小于等于“误差阈值”的计算总和就停止，否者直到找到误差最小的计算总和</div>
+            </div>
+         </div>
+         <div class="btns">
+            <button id="add" type="button" class="btn btn-primary">添加数据</button>
+            <button id="clear" type="button" class="btn btn-primary">清空</button>
+            <button id="textAdd" type="button" class="btn btn-primary">文本导入</button>
+            <!-- <div class="help inline-block">
+               <a class="help-trigger">?</a>
+               <div class="help-msg left-top">”剪贴板导入“暂不支持firefox,firefox暂不支持clipboard.read及相关api</div>
+            </div> -->
+         </div>
+         <div class="btns">
+            <button id="calc" type="button" class="btn btn-primary">开始计算</button>
+            <button id="history" type="button" class="btn btn-primary">历史记录</button>
+         </div>
 
-   <div id="result" class="result"></div>
-  </div>
- </div>
+         <ol id="tickets">
 
+         </ol>
 
- <script src="js/index.js"></script>
+         <div id="result" class="result"></div>
+      </div>
+   </div>
+
+   <div id="textAddDialog" class="dialog ">
+      <div class="dialog-mask"></div>
+      <div class="dialog-content bottom">
+         <textarea name="textAddText" id="textAddText" placeholder="请输入数据，以英文,分割"></textarea>
+         <div class="btns flex-between">
+            <button type="button" class="btn btn-primary dialog-close">取消</button>
+            <button id="confirmTextAdd" type="button" class="btn btn-primary">确认</button>
+         </div>
+      </div>
+   </div>
+
+   <div id="historyDialog" class="dialog ">
+      <div class="dialog-mask"></div>
+      <div class="dialog-content bottom scroll1">
+         <div>
+            历史记录
+         </div>
+         <div  id="historyTable">
+           
+         </div>
+      </div>
+   </div>
+
+   <script src="js/index.js"></script>
 </body>
 
 </html>

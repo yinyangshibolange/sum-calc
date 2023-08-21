@@ -1,5 +1,13 @@
 (function () {
- function calc (nums, target) {
+ /**
+  * 
+  * @param {*} nums 数据
+  * @param {*} target 目标值
+  * @param {*} mode 模式greater/less/closest
+  * @param {*} error_threshold 误差阈值
+  * @returns 
+  */
+ function calc (nums, target, mode = 'closest', error_threshold = 0) {
   var _nums_len = nums.length
   var len = Math.pow(2, _nums_len)
 
@@ -14,6 +22,9 @@
 
   var minArr = []
   var min = target * 10
+  if( mode === 'less') {
+   min = 0 
+  }
   for (let i = 0; i < len; i++) {
    var _num = strToLen(i.toString(2), _nums_len)
 
@@ -24,10 +35,35 @@
      _tempArr = [..._tempArr, nums[index]]
     }
    })
-   if (sum > target && sum < min) {
-    min = sum
-    minArr = _tempArr
+   if (mode === 'closest') {
+    if(Math.abs(sum - target) <= error_threshold) {
+     min = sum
+     minArr = _tempArr
+     break
+    } else if(Math.abs(sum - target) < Math.abs(min - target)) {
+     min = sum
+     minArr = _tempArr
+    }
+   } else if (mode === 'greater') {
+    if (sum >= target && sum-target <= error_threshold) {
+     min = sum
+     minArr = _tempArr
+     break
+    } else if(sum >= target && sum - target < min - target) {
+     min = sum
+     minArr = _tempArr
+    }
+   } else if (mode === 'less') {
+    if (sum <= target && target - sum <= error_threshold) {
+     min = sum
+     minArr = _tempArr
+     break
+    } else if(sum <= target && target - sum < target - min) {
+     min = sum
+     minArr = _tempArr
+    }
    }
+
   }
 
 
